@@ -1,34 +1,34 @@
 {
   "subscriptionId": {
-    "Value": "<<value>>",
+    "Value": "ac0c86bf-38a9-451e-83e6-5801987ec6cb",
     "Description": "Azure Subscription ID. All resources in an Azure subscription are billed together."
   },
   "subscriptionTenantId": {
-    "Value": "<<value>>",
+    "Value": "61795ac9-0019-4854-8a95-9a083b8c1187",
     "Description": "Id of the tenant to deploy to (If you are not sure how to get Tenant ID, please check Azure Active Directory in Azure Portal. Under Manage, click Properties. The tenant ID is shown in the Directory ID box). e.g 98f3ece2-3a5a-428b-aa4f-4c41b3f6eef0. Tenant ID is also in the \"Overview\" section\""
   },
   "resourceGroupName": {
-    "Value": "<<value>>",
+    "Value": "RG_ForNBCUBOT66",
     "Description": "Resource Group"
   },
   "region": {
-    "Value": "<<value>>",
+    "Value": "eastus",
     "Description": "The Azure region that's right for you and your customers. Not every resource is available in every region."
   },
   "baseResourceName": {
-    "Value": "<<value>>",
+    "Value": "NBCUCalendarEvent66",
     "Description": "The base name to use for the resources that will be provisioned."
   },
   "tenantId": {
-    "Value": "<<value>>",
+    "Value": "61795ac9-0019-4854-8a95-9a083b8c1187",
     "Description": "Tenant Id where the teams application will be installed. If the Azure subscription is in the same tenant, update with \"subscriptionTenantId\" parameter value."
   },
   "senderUPNList": {
-    "Value": "<<value>>",
+    "Value": "jomyjoseph2010_outlook.com#EXT#@jomyjoseph2010outlook.onmicrosoft.com",
     "Description": "Semicolon-delimited list of the user principal names (UPNs) allowed to send messages."
   },
   "isUpgrade": {
-    "Value": "false",
+    "Value": "true",
     "Description": "If this is an upgrade for old version of the app template, then value should be true. Otherwise, false is default (First-time deployment)."
   },
   "customDomainOption": {
@@ -60,7 +60,7 @@
     "Description": "The size of the hosting plan (small - 1, medium - 2, or large - 3). Default value: 1"
   },
   "gitRepoUrl": {
-    "Value": "https://github.com/OfficeDev/microsoft-teams-company-communicator-app.git",
+    "Value": "https://github.com/123jomy/CalendarEventExtension.git",
     "Description": "The URL to the GitHub repository to deploy."
   },
   "gitBranch": {
@@ -68,11 +68,11 @@
     "Description": "The branch of the GitHub repository to deploy."
   },
   "appDisplayName": {
-    "Value": "Company Communicator",
+    "Value": "NBCUCalendarEvent BOT",
     "Description": "The app (and bot) display name."
   },
   "appDescription": {
-    "Value": "Broadcast messages to multiple teams and people in one go.",
+    "Value": "Create Calendar event as part of Team Messaging Extensions BOT.",
     "Description": "The app (and bot) description."
   },
   "appIconUrl": {
@@ -80,19 +80,19 @@
     "Description": "The link to the icon for the app. It must resolve to a PNG file."
   },
   "companyName": {
-    "Value": "<<value>>",
+    "Value": "Messaging Extension RnD",
     "Description": "The display name for the company."
   },
   "websiteUrl": {
-    "Value": "<<value>>",
+    "Value": "https://www.Botrnd.com",
     "Description": "The https:// URL to the company's website. This link should take users to your company or product-specific landing page."
   },
   "privacyUrl": {
-    "Value": "<<value>>",
+    "Value": "https://www.Botrnd.com/privacy",
     "Description": "The https:// URL to the company's privacy policy."
   },
   "termsOfUseUrl": {
-    "Value": "<<value>>",
+    "Value": "https://www.Botrnd.com/termsOfUseUrl",
     "Description": "The https:// URL to the company's terms of use."
   }
 }
