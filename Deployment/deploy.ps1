@@ -148,12 +148,13 @@ function validateresourcesnames {
             servicetype        = 'webapp'
             authorizationtoken = $authorizationtoken
         },
-        @{
+          #CC 
+      <#  @{
             name               = $parameters.baseresourcename.value + '-data-function'
             servicetype        = 'webapp'
             authorizationtoken = $authorizationtoken
         },
-        @{
+      @{
             name               = $parameters.baseresourcename.value + '-function'
             servicetype        = 'webapp'
             authorizationtoken = $authorizationtoken
@@ -162,7 +163,7 @@ function validateresourcesnames {
             name               = $parameters.baseresourcename.value + '-prep-function'
             servicetype        = 'webapp'
             authorizationtoken = $authorizationtoken
-        },
+        }, #>
         @{
             name        = $parameters.baseresourcename.value
             servicetype = 'applicationinsights'
@@ -444,9 +445,9 @@ function DeployARMTemplate {
         }
         
         $appServicesNames = [System.Collections.ArrayList]@($parameters.BaseResourceName.Value #app-service
-        "$($parameters.BaseResourceName.Value)-prep-function", #prep-function
-        "$($parameters.BaseResourceName.Value)-function", #function
-        "$($parameters.BaseResourceName.Value)-data-function" #data-function
+        #"$($parameters.BaseResourceName.Value)-prep-function", #prep-function
+        #"$($parameters.BaseResourceName.Value)-function", #function
+        #"$($parameters.BaseResourceName.Value)-data-function" #data-function
         )
         
         $codeSynced = $false
@@ -933,7 +934,7 @@ function logout {
     }
 
 # Start Deployment.
-    Write-Ascii -InputObject "Company Communicator" -ForegroundColor Magenta
+    Write-Ascii -InputObject "Calendar Event BOT" -ForegroundColor Magenta
     WriteI -message "Starting deployment..."
 
 # Initialize connections - Azure Az/CLI/Azure AD
@@ -976,7 +977,8 @@ function logout {
    
 
 # Function call to Deploy ARM Template
-    #$deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password $userAppCred.appId $userAppCred.password
+    #CC $deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password $userAppCred.appId $userAppCred.password
+    #CC Line# 428
     $deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password # $userAppCred.appId $userAppCred.password
     if ($null -eq $deploymentOutput) {
         WriteE -message "Encountered an error during ARM template deployment. Exiting..."
