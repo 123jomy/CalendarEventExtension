@@ -12,7 +12,8 @@ function WriteI{
         [parameter(mandatory = $true)]
         [string]$message
     )
-    Write-Host $message -foregroundcolor white
+    $CurrentTime = Get-Date -Format "dddd MM/dd/yyyy HH:mm K "
+    Write-Host $CurrentTime : $message -foregroundcolor white
 }
 
 # write error
@@ -21,7 +22,8 @@ function WriteE{
         [parameter(mandatory = $true)]
         [string]$message
     )
-    Write-Host $message -foregroundcolor red -BackgroundColor black
+    $CurrentTime = Get-Date -Format "dddd MM/dd/yyyy HH:mm K "
+    Write-Host $CurrentTime : $message -foregroundcolor red -BackgroundColor black
 }
 
 # write warning
@@ -30,7 +32,8 @@ function WriteW{
         [parameter(mandatory = $true)]
         [string]$message
     )
-    Write-Host $message -foregroundcolor yellow -BackgroundColor black
+    $CurrentTime = Get-Date -Format "dddd MM/dd/yyyy HH:mm K "
+    Write-Host $CurrentTime : $message -foregroundcolor yellow -BackgroundColor black
 }
 
 # write success
@@ -39,7 +42,8 @@ function WriteS{
         [parameter(mandatory = $true)]
         [string]$message
     )
-    Write-Host $message -foregroundcolor green -BackgroundColor black
+    $CurrentTime = Get-Date -Format "dddd MM/dd/yyyy HH:mm K "
+    Write-Host $CurrentTime : $message -foregroundcolor green -BackgroundColor black
 }
 
 function IsValidGuid
@@ -428,17 +432,18 @@ function WaitForCodeDeploymentSync {
 function DeployARMTemplate {
     Param(
         [Parameter(Mandatory = $true)] $authorappId,
-        [Parameter(Mandatory = $true)] $authorsecret,
-        [Parameter(Mandatory = $true)] $userappId,
-        [Parameter(Mandatory = $true)] $usersecret
+        [Parameter(Mandatory = $true)] $authorsecret
+        #[Parameter(Mandatory = $true)] $userappId,
+        #[Parameter(Mandatory = $true)] $usersecret
     )
     try {
+        WriteI -message "DeployARMTemplate execcution started..."
         if ((az group exists --name $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value) -eq $false) {
             WriteI -message "Creating resource group $($parameters.resourceGroupName.Value)..."
             az group create --name $parameters.resourceGroupName.Value --location $parameters.region.Value --subscription $parameters.subscriptionId.Value
         }
         
-        $appServicesNames = [System.Collections.ArrayList]@($parameters.BaseResourceName.Value, #app-service
+        $appServicesNames = [System.Collections.ArrayList]@($parameters.BaseResourceName.Value #app-service
         "$($parameters.BaseResourceName.Value)-prep-function", #prep-function
         "$($parameters.BaseResourceName.Value)-function", #function
         "$($parameters.BaseResourceName.Value)-data-function" #data-function
@@ -469,7 +474,8 @@ function DeployARMTemplate {
 
         # Deploy ARM templates
         WriteI -message "`nDeploying app services, Azure function, bot service, and other supporting resources... (this step can take over an hour)"
-        $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret" "userClientId=$userappId" "userClientSecret=$usersecret" "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
+        #CC $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret" "userClientId=$userappId" "userClientSecret=$usersecret" "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
+        $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret"  "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
 
         $deploymentExceptionMessage = "ERROR: ARM template deployment error."
         if ($LASTEXITCODE -ne 0) {
@@ -484,7 +490,8 @@ function DeployARMTemplate {
                 
                 if($appserviceCodeSyncSuccess){
                     WriteI -message "Re-running deployment to fetch output..."
-                    $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret" "userClientId=$userappId" "userClientSecret=$usersecret" "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
+                    #CC $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret" "userClientId=$userappId" "userClientSecret=$usersecret" "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
+                    $armDeploymentResult = az deployment group create --resource-group $parameters.resourceGroupName.Value --subscription $parameters.subscriptionId.Value --template-file 'azuredeploy.json' --parameters "baseResourceName=$($parameters.baseResourceName.Value)" "authorClientId=$authorappId" "authorClientSecret=$authorsecret" "senderUPNList=$($parameters.senderUPNList.Value)" "customDomainOption=$($parameters.customDomainOption.Value)" "appDisplayName=$($parameters.appDisplayName.Value)" "appDescription=$($parameters.appDescription.Value)" "appIconUrl=$($parameters.appIconUrl.Value)" "tenantId=$($parameters.tenantId.Value)" "hostingPlanSku=$($parameters.hostingPlanSku.Value)" "hostingPlanSize=$($parameters.hostingPlanSize.Value)" "location=$($parameters.region.Value)" "gitRepoUrl=$($parameters.gitRepoUrl.Value)" "gitBranch=$($parameters.gitBranch.Value)" "ProactivelyInstallUserApp=$($parameters.proactivelyInstallUserApp.Value)" "UserAppExternalId=$($parameters.userAppExternalId.Value)" "DefaultCulture=$($parameters.defaultCulture.Value)" "SupportedCultures=$($parameters.supportedCultures.Value)"
                 } else{
                     CollectARMDeploymentLogs
                     Throw $deploymentExceptionMessage
@@ -537,8 +544,8 @@ function DeployARMTemplate {
 function CreateAdAppPrincipal {
     Param(
         [Parameter(Mandatory = $true)] $tenantId,
-        [Parameter(Mandatory = $true)] $authorAppId,
-        [Parameter(Mandatory = $true)] $userAppId
+        [Parameter(Mandatory = $true)] $authorAppId
+       # [Parameter(Mandatory = $true)] $userAppId
     )
 
     WriteI -message "`nPlease login to the tenant where this app template will be used in Microsoft Teams."
@@ -548,11 +555,11 @@ function CreateAdAppPrincipal {
     if (0 -eq ($sp | ConvertFrom-Json).length) {
         WriteI -message "Azure AD app principal will be created in tenant: $tenantId"
         
-        # Delete old service principal for user app
-        $sp = az ad sp list --filter "appId eq '$userAppId'"
-        if (0 -ne ($sp | ConvertFrom-Json).length) {
-            $sp = az ad sp delete --id $userAppId
-        }
+        ## Delete old service principal for user app
+        #$sp = az ad sp list --filter "appId eq '$userAppId'"
+        #if (0 -ne ($sp | ConvertFrom-Json).length) {
+        #    $sp = az ad sp delete --id $userAppId
+        #}
 
         # create new service principal
         $sp = az ad sp create --id $authorAppId
@@ -598,7 +605,8 @@ function GrantAdminConsent {
 }
 
 # Azure AD app update. Assigning Admin-consent,RedirectUris,IdentifierUris,Optionalclaim etc. 
-function ADAppUpdate {
+function ADAppUpdate 
+{
     Param(
         [Parameter(Mandatory = $true)] $appdomainName,
         [Parameter(Mandatory = $true)] $appId
@@ -651,7 +659,8 @@ function ADAppUpdate {
 
     if (0 -eq $apps.Length) {
         $app = New-AzureADApplication -DisplayName $appName
-    } else {
+    } 
+    else {
         $app = $apps[0]
     }
 
@@ -729,7 +738,8 @@ function ADAppUpdate {
 }
 
 # Removing existing access of user app.
-function ADAppUpdateUser {
+<#CC function ADAppUpdateUser 
+{
     Param(
         [Parameter(Mandatory = $true)] $appId
     )
@@ -769,6 +779,7 @@ function ADAppUpdateUser {
     az ad app update --id $appId --optional-claims './AadOptionalClaims_Reset.json'
     az ad app update --id $appId --remove requiredResourceAccess
 }
+#>
 #update manifest file and create a .zip file.
 function GenerateAppManifestPackage {
     Param(
@@ -922,7 +933,7 @@ function logout {
     }
 
 # Start Deployment.
-    Write-Ascii -InputObject "Company Communicator v4" -ForegroundColor Magenta
+    Write-Ascii -InputObject "Company Communicator" -ForegroundColor Magenta
     WriteI -message "Starting deployment..."
 
 # Initialize connections - Azure Az/CLI/Azure AD
@@ -946,30 +957,35 @@ function logout {
         EXIT
     }
 
-# Create User App
-    $userAppCred = CreateAzureADApp $parameters.baseresourcename.Value
-    if ($null -eq $userAppCred) {
-        WriteE -message "Failed to create or update User app in Azure Active Directory. Exiting..."
-        logout
-        Exit
-    }
+## Create User App
+#   $userAppCred = CreateAzureADApp $parameters.baseresourcename.Value
+#   if ($null -eq $userAppCred) {
+#      WriteE -message "Failed to create or update User app in Azure Active Directory. Exiting..."
+#       logout
+#       Exit
+#   }
 
 # Create Author App
-    $authorsApp = $parameters.baseResourceName.Value + '-authors'
+    $authorsApp = $parameters.baseResourceName.Value #+ '-authors'
     $authorAppCred = CreateAzureADApp $authorsApp
     if ($null -eq $authorAppCred) {
         WriteE -message "Failed to create or update the Author app in Azure Active Directory. Exiting..."
         logout
         Exit
     }
+   
 
 # Function call to Deploy ARM Template
-    $deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password $userAppCred.appId $userAppCred.password
+    #$deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password $userAppCred.appId $userAppCred.password
+    $deploymentOutput = DeployARMTemplate $authorAppCred.appId $authorAppCred.password # $userAppCred.appId $userAppCred.password
     if ($null -eq $deploymentOutput) {
         WriteE -message "Encountered an error during ARM template deployment. Exiting..."
         logout
         Exit
     }
+
+#logout
+#Exit
 
 # Reading the deployment output.
     WriteI -message "Reading deployment outputs..."
@@ -979,7 +995,8 @@ function logout {
 
 # Function call to update reply-urls and uris for registered app.
     WriteI -message "Updating required parameters and urls..."
-    ADAppUpdateUser $userAppCred.appId
+    #CC ADAppUpdateUser $userAppCred.appId
+    #CC Line# 603
     ADAppUpdate $appdomainName $authorAppCred.appId
 
 # Log out to avoid tokens caching
@@ -987,12 +1004,14 @@ function logout {
 
 # App template is deployed on tenant A and used in tenant B
     if ($parameters.tenantId.Value -ne $parameters.subscriptionTenantId.Value){
-        CreateAdAppPrincipal $parameters.tenantId.Value $authorAppCred.appId $userAppCred.appId
+        CreateAdAppPrincipal $parameters.tenantId.Value $authorAppCred.appId #$userAppCred.appId
     }
 
 # Function call to generate manifest.zip folder for User and Author. 
+   ##CC Line#
     GenerateAppManifestPackage 'authors' $appdomainName $authorAppCred.appId
-    GenerateAppManifestPackage 'users' $appdomainName $userAppCred.appId
+   
+   #CC GenerateAppManifestPackage 'users' $appdomainName $userAppCred.appId
 
 # Open manifest folder
     Invoke-Item ..\Manifest\
