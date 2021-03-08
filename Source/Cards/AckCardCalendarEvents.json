@@ -1,0 +1,33 @@
+﻿{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.2",
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "New Calendar Event Created!",
+          "size": "Medium",
+          "weight": "Bolder"
+        }
+      ],
+      "bleed": true,
+      "spacing": "None"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Created a new calendar event \"**ReplaceTitel**\" for in your calendar. You can open the event by clicking the button below!",
+      "wrap": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Open Event",
+      "url": "replaceUrl"
+    }
+  ]
+
+}

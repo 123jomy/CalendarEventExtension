@@ -1,0 +1,71 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.7/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.7",
+  "version": "1.2.0",
+  "id": "84DF4C39-B044-4776-B16C-82133CC01665",
+  "packageName": "Create Calendar Event BOT",
+  "developer": {
+    "name": "BOT R&D",
+    "websiteUrl": "https://www.Botrnd.com",
+    "privacyUrl": "https://www.Botrnd.com/privacy",
+    "termsOfUseUrl": "https://www.Botrnd.com/termsofuse"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Create Calendar Event BOT",
+    "full": "BOT to Create CalendarEvent"
+  },
+  "description": {
+    "short": "Create Calendar Event BOT",
+    "full": "Create Calendar Event BOT"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "d80b5941-3557-4d28-a918-490c708a2142",
+      "scopes": [
+        "personal",
+        "team",
+        "groupchat"
+      ],
+      "supportsFiles": true,
+      "isNotificationOnly": false
+    }
+  ],
+  "composeExtensions": [
+    {
+      "botId": "d80b5941-3557-4d28-a918-490c708a2142",
+      "canUpdateConfiguration": true,
+      "commands": [
+        {
+          "id": "CreateCalendarEvent",
+          "type": "action",
+          "title": "Create Calendar Event",
+          "description": "",
+          "initialRun": false,
+          "fetchTask": true,
+          "context": [
+            "message"
+          ],
+          "parameters": [
+            {
+              "name": "param",
+              "title": "param",
+              "description": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "token.botframework.com"
+  ]
+}

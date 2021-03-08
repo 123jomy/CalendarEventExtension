@@ -1,0 +1,32 @@
+﻿{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "New ToDo Task Created!",
+          "size": "Medium",
+          "weight": "Bolder"
+        }
+      ],
+      "bleed": true,
+      "spacing": "None"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Created a new task \"**ReplaceTitel**\" for in your To Do list. You can open the task by clicking the button below!",
+      "wrap": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Open Task",
+      "url": "replaceUrl"
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.2"
+}
